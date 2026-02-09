@@ -1,0 +1,32 @@
+import time
+import requests
+import json
+
+SERVICES = {
+    "service_a":
+"http://localhost:5001/health",
+    "service_b":
+"http://localhost:5002/health"
+}
+
+def check_services():
+    for name, url in SERVICES.items():
+        try:
+            r = requests.get(url, timeout=2)
+            status = r.json().get("status", "UNKNOWN")
+            if status != "OK":
+                print(f"ALERT: {name} is UNHEALTHY ({status})")
+            else:
+                print(f"{name} is healthy")
+        except Exception as e:
+             print(f"ERROR: {name} unreachable ({e})")
+
+if __name__== "__main__":
+    print("SentinelX Monitor started\n")
+    while True:
+        check_services()
+        print("-" * 40)
+        time.sleep(5)
+
+
+
